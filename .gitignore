@@ -1,0 +1,9 @@
+bs/
+obj/
+log
+.vimrc
+.run
+tres
+include/cglm
+include/term3d_c
+include/FastNoiseLite.h
