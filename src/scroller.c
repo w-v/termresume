@@ -10,8 +10,9 @@
 int nanosleep(const struct timespec *req, struct timespec *rem);
 
 char* lines[] = { 
-    "Hey, I'm Robin",
-    "I'm a research engineer",       // get research blinking replacing by software
+    "Hey, I'm Robin 👋",
+    "I'm a software engineer",
+    /* "I'm a research engineer",       // get research blinking replacing by software */
     "I like Computer Graphics,",
     "Python, and terminals",
     "This is my homepage 🏡",
@@ -19,7 +20,6 @@ char* lines[] = {
     "Browse it from your terminal:",
     "",
     "ssh -p 4222 fr@robinadi.li",
-    "https://google.com",
     NULL
 };
 
@@ -133,7 +133,7 @@ void animate(struct notcurses* nc, struct tres* tr){
 
         draw_box(n,NULL, tr);
         box_corners(tr);
-        notcurses_render(nc);
+        /* notcurses_render(nc); */
         nanosleep(&pause, NULL);
         /* sleep(1); */
     }
@@ -153,7 +153,7 @@ void* scroller(void* args){
     unsigned int* off = tb[TSCROL]->bs->off;
     int l = 0;
     char* c = lines[l];
-    int nsec = 400000;//00;
+    int nsec = 40000000;
     struct timespec pauses[] = {
         { .tv_sec = 0, .tv_nsec = nsec, },
         { .tv_sec = 0, .tv_nsec = nsec*2, },
@@ -197,10 +197,10 @@ void* scroller(void* args){
             ncplane_cursor_move_rel(n, 0, -1);
         }
 
-        notcurses_render(nc);
+        /* notcurses_render(nc); */
     }
     ncplane_putchar(n, ' ');
-    notcurses_render(nc);
+    /* notcurses_render(nc); */
     return NULL;
 }
 

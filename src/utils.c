@@ -262,18 +262,25 @@ void box_connect(struct ncplane* ns,struct ncplane* nt, int corn[2]){
     /* fprintf(stderr, "source char %s, len %d\n", schar, strlen(schar)); */
     /* fprintf(stderr, "target char %s, len %d\n", tchar, strlen(tchar)); */
     /* fprintf(stderr, "result char %s, len %d\n", rchar, strlen(rchar)); */
+    
+    // /!\ dont disturb cursor position of other planes
+    unsigned int cpos[2];
     nccell rcell = NCCELL_TRIVIAL_INITIALIZER;
     if(is_below(ns, nt)){
         /* fprintf(stderr, "target below source\n"); */
         /* fprintf(stderr, "printing to source\n"); */
+        ncplane_cursor_yx(ns, &cpos[0], &cpos[1]);
         nccell_load(ns, &rcell, rchar);
         ncplane_putc_yx(ns, rels[0], rels[1], &rcell);
+        ncplane_cursor_move_yx(ns, cpos[0], cpos[1]);
     }
     else {
         /* fprintf(stderr, "target above source\n"); */
         /* fprintf(stderr, "printing to target\n"); */
+        ncplane_cursor_yx(nt, &cpos[0], &cpos[1]);
         nccell_load(nt, &rcell, rchar);
         ncplane_putc_yx(nt, relt[0], relt[1], &rcell);
+        ncplane_cursor_move_yx(nt, cpos[0], cpos[1]);
     }
 
 }

@@ -74,12 +74,15 @@ struct tblock* create_chos(struct notcurses* nc, struct tres* tr){
         .flags = 0,
     };
     struct ncplane* n = ncplane_create(tr->tb[TCONT]->n, &nopts);
+    ncplane_set_bg_alpha(n, NCALPHA_OPAQUE);
+    ncplane_set_base(n," ", 0, 0);
     tchos->widget = (void*) create_selector(n);
 
     tchos->n = n;
 
     draw_box(n, NULL, tr);
-    ncplane_move_above(n, tb[TCONT]->n);
+    /* ncplane_move_above(n, tb[TCONT]->n); */
+    ncplane_move_top(n);
 
 
     return tchos;
@@ -91,19 +94,19 @@ void* run_chos(void* args){
     struct tres* tr = cargs->tr;
 
     struct tblock** tb = tr->tb;
-    /* struct ncplane* n = tb[TCHOS]->n; */
+    struct ncplane* n = tb[TCHOS]->n;
     struct ncselector* ns = (struct ncselector*) tb[TCHOS]->widget;
     
     struct ncinput ni;
     uint32_t keypress;
-    /* fprintf(stderr, "init ma couille\n"); */
     while(1){
         keypress = notcurses_get_blocking(nc, &ni);
-        fprintf(stderr, "keypress %d\n", keypress);
+        /* fprintf(stderr, "keypress %d\n", keypress); */
         ncselector_offer_input(ns, &ni);
-        notcurses_render(nc);
+        draw_box(n, NULL, tr);
+        box_corners(tr);
+        /* notcurses_render(nc); */
     }
-    /* fprintf(stderr, "end\n"); */
     ncselector_destroy(ns, NULL);
     return NULL;
 }

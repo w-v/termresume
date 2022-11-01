@@ -12,26 +12,54 @@
 #include "cont.h"
 #include "bg.h"
 #include "bg_3dperlin.h"
+#include "text.h"
+
+void check_mingeom(struct notcurses* nc, struct tres* tr){
+    unsigned int tgeom[2], cgeom[2];
+    struct ncplane* nstd = notcurses_stddim_yx(nc, &tgeom[0], &tgeom[1]);
+
+    ncplane_dim_yx(tr->tb[TCONT]->n, &cgeom[0], &cgeom[1]);
+
+    if(tgeom[0] < cgeom[0] || tgeom[1] < cgeom[1]){
+        struct ncplane_options nopts = {
+            .y = NCALIGN_CENTER,
+            .x = NCALIGN_CENTER,
+            .rows = tgeom[0],
+            .cols = tgeom[1],
+            .userptr = NULL,
+            .name = "mingeom_warn",
+            .resizecb = NULL,
+            .flags = NCPLANE_OPTION_AUTOGROW | NCPLANE_OPTION_HORALIGNED | NCPLANE_OPTION_VERALIGNED
+        };
+
+        struct ncplane* n = ncplane_create(nstd, &nopts);
+
+        ncplane_printf_aligned(n, tgeom[0]/2, NCALIGN_CENTER, "Terminal must be at least %dx%d, please resize and reload", cgeom[0], cgeom[1]);
+        notcurses_render(nc);
+        while(1) sleep(1);
+        
+    }
+}
 
 int main(void){
     struct notcurses_options opts = {
         .flags = 0,
-        .loglevel = NCLOGLEVEL_DEBUG
+        /* .loglevel = NCLOGLEVEL_DEBUG */
     };
 
     struct notcurses* nc = notcurses_init(&opts, NULL);
     if(nc == NULL){
         return EXIT_FAILURE;
     }
-    /* notcurses_mice_enable(nc, NCMICE_BUTTON_EVENT); */
+    notcurses_mice_enable(nc, NCMICE_BUTTON_EVENT);
 
-    int nblocks = 5;
+    int nblocks = 6;
 
     struct tblock** tb = malloc(nblocks * sizeof(tblock*));
     memset(tb, 0, nblocks * sizeof(tblock*));
 
     tblock_e* blocks = malloc(nblocks * sizeof(tblock_e));
-    memcpy(blocks, (tblock_e []){TCONT, TPIC, TSCROL, TCHOS, TEND}, nblocks*sizeof(tblock_e));
+    memcpy(blocks, (tblock_e []){TCONT, TPIC, TSCROL, TCHOS, TTEXT, TEND}, nblocks*sizeof(tblock_e));
 
     struct tres* tr = &(struct tres){
         .tb = tb,
@@ -46,42 +74,48 @@ int main(void){
 
     tb[TCHOS] = create_chos(nc, tr);
 
+    tb[TTEXT] = create_text(nc, tr);
+
+    box_corners(tr);
+
     resize_cont(nc, tr);
     center_cont(nc, tr);
 
-    box_corners(tr);
+    check_mingeom(nc,tr);
 
 
     struct ncplane* nbg = create_bg(nc, tr);
     struct bg_3dperlin* bg3d = bg_3dperlin_create(nc);
+
+    pthread_t scroller_thread;
+    struct scroller_args sargs = {
+        .nc = nc,
+        .tr = tr
+    };
+
+    pthread_create(&scroller_thread, NULL, scroller, &sargs);
+
+    pthread_t chos_thread;
+    struct chos_args cargs = {
+        .nc = nc,
+        .tr = tr
+    };
+
+    pthread_create(&chos_thread, NULL, run_chos, &cargs);
+
     bg_3dperlin_run(nc, tr, nbg, bg3d);
 
-/*     pthread_t scroller_thread; */
-/*     struct scroller_args sargs = { */
-/*         .nc = nc, */
-/*         .tr = tr */
-/*     }; */
-
-/*     pthread_create(&scroller_thread, NULL, scroller, &sargs); */
-/*     pthread_join(scroller_thread, NULL); */
-
-/*     pthread_t chos_thread; */
-/*     struct chos_args cargs = { */
-/*         .nc = nc, */
-/*         .tr = tr */
-/*     }; */
-
-    /* pthread_create(&chos_thread, NULL, run_chos, &cargs); */
-    /* run_chos((void*) &cargs); */
-
-    /* pthread_join(chos_thread, NULL); */
+    pthread_join(scroller_thread, NULL);
+    pthread_join(chos_thread, NULL);
 
     sleep(100);
+
     bg_3dperlin_destroy(bg3d);
     tblock_destroy(tb[TCONT]);
     tblock_destroy(tb[TPIC]);
     tblock_destroy(tb[TSCROL]);
     tblock_destroy(tb[TCHOS]);
+    tblock_destroy(tb[TTEXT]);
     notcurses_stop(nc);
     return EXIT_SUCCESS;
 }

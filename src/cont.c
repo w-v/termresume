@@ -41,8 +41,8 @@ struct tblock* create_cont(struct notcurses* nc, struct tres* tr){
 
     struct ncplane* n = ncplane_create(nstd, &nopts);
 
-    ncplane_set_bg_alpha(n, NCALPHA_OPAQUE);
-    ncplane_set_base(n," ", 0, 0);
+    /* ncplane_set_bg_alpha(n, NCALPHA_OPAQUE); */
+    /* ncplane_set_base(n," ", 0, 0); */
     /* draw_box(n, NULL, tr); */
 
     tcont->n = n;

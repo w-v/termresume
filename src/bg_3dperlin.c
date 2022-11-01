@@ -124,23 +124,28 @@ void* bg_3dperlin_run(struct notcurses* nc, struct tres* tr, struct ncplane* n, 
 
     int i = 0, len = bg3d->len;
 
+    clock_t t0 = clock(), tdiff =  CLOCKS_PER_SEC * 6;
+
     while(1){
-    
-        clearfbuf(bg3d->fbuf, bg3d->tgeom);
-        clearzbuf(bg3d->zbuf, bg3d->tgeom);
 
-        genterrain_ln(bg3d->g, len, len, i, bg3d->scale);
-        transform(bg3d->g, bg3d->g, NULL, (vec3){0,0,-bg3d->scale}, NULL);
-        terrain_normals_ln(bg3d->g, len, len, (i-1)%len);
+        if(clock()-t0 > tdiff){
+        
+            clearfbuf(bg3d->fbuf, bg3d->tgeom);
+            clearzbuf(bg3d->zbuf, bg3d->tgeom);
 
-        transform(bg3d->g, bg3d->tg, bg3d->rot, bg3d->tr, NULL);
+            genterrain_ln(bg3d->g, len, len, i, bg3d->scale);
+            transform(bg3d->g, bg3d->g, NULL, (vec3){0,0,-bg3d->scale}, NULL);
+            terrain_normals_ln(bg3d->g, len, len, (i-1)%len);
 
-        render(bg3d->tg, bg3d->fbuf, bg3d->zbuf, bg3d->tgeom, bg3d->rargs);
+            transform(bg3d->g, bg3d->tg, bg3d->rot, bg3d->tr, NULL);
 
-        /* printfbuf(fbuf, tgeom); */
-        for(int i=0; i<bg3d->tgeom[0]; i++){
-            ncplane_cursor_move_yx(n, i, 0);
-            ncplane_printf(n, "%s", bg3d->fbuf[i]);
+            render(bg3d->tg, bg3d->fbuf, bg3d->zbuf, bg3d->tgeom, bg3d->rargs);
+
+            /* printfbuf(fbuf, tgeom); */
+            for(int i=0; i<bg3d->tgeom[0]; i++){
+                ncplane_cursor_move_yx(n, i, 0);
+                ncplane_printf(n, "%s", bg3d->fbuf[i]);
+            }
         }
         
         notcurses_render(nc);

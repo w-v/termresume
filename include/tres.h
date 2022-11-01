@@ -8,6 +8,7 @@ typedef enum {
     TPIC,
     TSCROL,
     TCHOS,
+    TTEXT,
     TEND
 } tblock_e;
 

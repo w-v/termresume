@@ -49,7 +49,7 @@ struct tblock* create_pic(struct notcurses* nc, struct tres* tr){
         blitter = NCBLIT_DEFAULT;
     }
 
-    const char *fn = "/home/robin/src/termresume/pic/me.jpg";
+    const char *fn = "/home/robin/src/termresume/bs/pic/me.jpg";
     struct ncvisual* ncv = ncvisual_from_file(fn);
 
     struct ncvisual_options vopts = {
