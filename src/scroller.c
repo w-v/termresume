@@ -23,15 +23,6 @@ char* lines[] = {
     NULL
 };
 
-unsigned int maxlen(char** lines){
-    unsigned int max = 0, m;
-    while(*lines != NULL){
-        if((m = strlen(*(lines++))) > max){
-            max = m;
-        }
-    }
-    return max;
-}
 
 struct tblock* create_scroller(struct tres* tr){
     struct tblock** tb = tr->tb;

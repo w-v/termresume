@@ -14,4 +14,5 @@ struct ncplane* boxed(struct ncplane* inner, unsigned int margy, unsigned int ma
 void draw_box(struct ncplane* ntarg, char* border, struct tres* tr);
 void box_corners(struct tres* tr);
 
+unsigned int maxlen(char** lines);
 #endif

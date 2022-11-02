@@ -387,3 +387,13 @@ void draw_box(struct ncplane* ntarg, char* border, struct tres* tr){
     /* } */
 
 }
+
+unsigned int maxlen(char** lines){
+    unsigned int max = 0, m;
+    while(*lines != NULL){
+        if((m = strlen(*(lines++))) > max){
+            max = m;
+        }
+    }
+    return max;
+}

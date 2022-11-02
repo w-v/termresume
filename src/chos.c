@@ -7,29 +7,75 @@
 #include "utils.h"
 #include "block.h"
 
-static struct ncselector_item items[] = {
-#define SITEM(s, l) { s, l, }
-  SITEM("About", NULL),
-  SITEM("Work", NULL),
-  SITEM("Education", NULL),
-  SITEM("Skills", NULL),
-  SITEM(NULL, NULL),
-#undef SITEM
+char* items[] = {
+  "About",
+  "Work",
+  "Education",
+  "Skills",
+  NULL
 };
 
-struct ncselector* create_selector(struct ncplane* n){
-  ncselector_options sopts;
-  memset(&sopts, 0, sizeof(sopts));
-  sopts.defidx = 0;
-  sopts.items = items;
-  sopts.opchannels = NCCHANNELS_INITIALIZER(0xff, 0xff, 0xff, 0, 0, 0);
-  return ncselector_create(n, &sopts);
+struct mselector* mselector_create(struct ncplane* n, struct blocksize* bs){
+    struct mselector* msel = malloc(sizeof(struct mselector));
+    memset(msel, 0, sizeof(*msel));
+    msel->sel = 0;
+    msel->items = items;
+    msel->nitems = sizeof(items)/sizeof(char*)-1;
+    
+    int y = bs->off[0], x, i = 0;
+    char** itm = items;
+    while(*itm != NULL){
+        if(i == msel->sel){
+            ncplane_set_fg_rgb8(n, 0, 0, 0);
+            ncplane_set_bg_rgb8(n, 255, 255, 255);
+        }
+        x = bs->size[1] - strlen(*itm) - bs->off[1];
+        ncplane_putstr_yx(n, y++, x, *itm++);
+        if(i++ == msel->sel){
+            ncplane_set_fg_default(n);
+            ncplane_set_bg_default(n);
+        }
+    }
+    return msel;
+}
+
+int mselector_select(struct tblock* tb, int nsel){
+    struct ncplane* n = tb->n;
+    struct mselector* msel = (struct mselector*) tb->widget;
+    struct blocksize* bs = tb->bs;
+
+    if(nsel > msel->nitems-1 || nsel < 0){
+        return 0;
+    }
+
+    int osel = msel->sel;
+     
+    // remove old highlight
+    ncplane_set_fg_default(n);
+    ncplane_set_bg_default(n);
+    int x = bs->size[1] - strlen(msel->items[osel]) - bs->off[1],
+        y = bs->off[0] + osel;
+    ncplane_putstr_yx(n, y++, x, msel->items[osel]);
+
+    // add new highlight
+    ncplane_set_fg_rgb8(n, 0, 0, 0);
+    ncplane_set_bg_rgb8(n, 255, 255, 255);
+    x = bs->size[1] - strlen(msel->items[nsel]) - bs->off[1];
+    y = bs->off[0] + nsel;
+    ncplane_putstr_yx(n, y++, x, msel->items[nsel]);
+    msel->sel = nsel;
+
+    return nsel-osel;
 }
 
 struct tblock* create_chos(struct notcurses* nc, struct tres* tr){
 
     struct tblock** tb = tr->tb;
     struct tblock* tchos = tblock_init();
+
+    unsigned int 
+        nrows = sizeof(items)/sizeof(char*)-1,
+        ncols = maxlen(items)+1;
 
     /* create block */
 
@@ -49,12 +95,12 @@ struct tblock* create_chos(struct notcurses* nc, struct tres* tr){
 
     *(tchos->bd) = (struct blockdef) {
         .align = {&align[0], &align[1]},
-        .sizerel = {0.3f, 0.3f},
-        .sizemin = {20, 20},
-        .sizemax = {20, 20},
+        .sizerel = {0.f, 0.f},
+        .sizemin = {nrows, ncols},
+        .sizemax = {nrows, ncols},
         .padrel = {0.f, 0.f},
-        .padmin = {0, 0},
-        .padmax = {0, 0},
+        .padmin = {1, 2},
+        .padmax = {1, 0},
         .margrel = {0.f, 0.f},
         .margmin = {0, 0},
         .margmax = {0, 0},
@@ -76,7 +122,7 @@ struct tblock* create_chos(struct notcurses* nc, struct tres* tr){
     struct ncplane* n = ncplane_create(tr->tb[TCONT]->n, &nopts);
     ncplane_set_bg_alpha(n, NCALPHA_OPAQUE);
     ncplane_set_base(n," ", 0, 0);
-    tchos->widget = (void*) create_selector(n);
+    tchos->widget = (void*) mselector_create(n, tchos->bs);
 
     tchos->n = n;
 
@@ -95,18 +141,22 @@ void* run_chos(void* args){
 
     struct tblock** tb = tr->tb;
     struct ncplane* n = tb[TCHOS]->n;
-    struct ncselector* ns = (struct ncselector*) tb[TCHOS]->widget;
+    struct mselector* msel = (struct mselector*) tb[TCHOS]->widget;
     
     struct ncinput ni;
     uint32_t keypress;
     while(1){
-        keypress = notcurses_get_blocking(nc, &ni);
-        /* fprintf(stderr, "keypress %d\n", keypress); */
-        ncselector_offer_input(ns, &ni);
-        draw_box(n, NULL, tr);
-        box_corners(tr);
-        /* notcurses_render(nc); */
+        mselector_select(tb[TCHOS], (msel->sel+1)%msel->nitems);
+        sleep(1);
     }
-    ncselector_destroy(ns, NULL);
-    return NULL;
+    /* while(1){ */
+    /*     keypress = notcurses_get_blocking(nc, &ni); */
+    /*     /1* fprintf(stderr, "keypress %d\n", keypress); *1/ */
+    /*     ncselector_offer_input(ns, &ni); */
+    /*     draw_box(n, NULL, tr); */
+    /*     box_corners(tr); */
+    /*     /1* notcurses_render(nc); *1/ */
+    /* } */
+    /* ncselector_destroy(ns, NULL); */
+    /* return NULL; */
 }

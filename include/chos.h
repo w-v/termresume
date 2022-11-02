@@ -13,5 +13,11 @@ typedef struct chos_args {
 
 void* run_chos(void* args);
 
+typedef struct mselector {
+   int sel; 
+   char** items;
+   int nitems;
+} mselector;
+
 #endif
 
