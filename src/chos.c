@@ -100,7 +100,7 @@ struct tblock* create_chos(struct notcurses* nc, struct tres* tr){
         .sizemax = {nrows, ncols},
         .padrel = {0.f, 0.f},
         .padmin = {1, 2},
-        .padmax = {1, 0},
+        .padmax = {1, 2},
         .margrel = {0.f, 0.f},
         .margmin = {0, 0},
         .margmax = {0, 0},
@@ -134,6 +134,59 @@ struct tblock* create_chos(struct notcurses* nc, struct tres* tr){
     return tchos;
 }
 
+bool mselector_offer_mice(struct tblock* tb, const ncinput* nc){
+    struct ncplane* n = tb->n;
+    struct mselector* msel = (struct mselector*) tb->widget;
+    struct blocksize* bs = tb->bs;
+
+    if(nc->evtype == NCTYPE_PRESS && (nc->id == NCKEY_BUTTON1 || nc->id == NCKEY_SCROLL_UP || nc->id == NCKEY_SCROLL_DOWN)){
+        // mouse event
+        int y = nc->y, x = nc->x;
+        if(ncplane_translate_abs(n, &y, &x)){
+            // inside plane
+            if(y >= bs->off[0] && y <= bs->size[0]-bs->off[0]){
+                // inside items area
+                if(nc->id == NCKEY_BUTTON1){
+                    int id = y-bs->off[0];
+                    mselector_select(tb, id);
+                }
+                else if(nc->id == NCKEY_SCROLL_UP){
+                    mselector_select(tb, msel->sel-1);
+                }
+                else if(nc->id == NCKEY_SCROLL_DOWN){
+                    mselector_select(tb, msel->sel+1);
+                }
+                return true;
+            }
+        }
+    }
+    return false;
+
+}
+
+bool mselector_offer_kbd(struct tblock* tb, const ncinput* nc){
+    struct mselector* msel = (struct mselector*) tb->widget;
+
+    if(nc->evtype != NCTYPE_RELEASE){
+        if(nc->id == NCKEY_UP){
+            mselector_select(tb, msel->sel-1);
+            return true;
+        }else if(nc->id == NCKEY_DOWN){
+            mselector_select(tb, msel->sel+1);
+            return true;
+        }else if(nc->id == NCKEY_PGDOWN){
+            mselector_select(tb, msel->sel+1);
+            return true;
+        }else if(nc->id == NCKEY_PGUP){
+            mselector_select(tb, msel->sel-1);
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
 void* run_chos(void* args){
     struct chos_args* cargs = (struct chos_args*) args;
     struct notcurses* nc = cargs->nc;
@@ -145,18 +198,20 @@ void* run_chos(void* args){
     
     struct ncinput ni;
     uint32_t keypress;
-    while(1){
-        mselector_select(tb[TCHOS], (msel->sel+1)%msel->nitems);
-        sleep(1);
-    }
     /* while(1){ */
-    /*     keypress = notcurses_get_blocking(nc, &ni); */
-    /*     /1* fprintf(stderr, "keypress %d\n", keypress); *1/ */
-    /*     ncselector_offer_input(ns, &ni); */
-    /*     draw_box(n, NULL, tr); */
-    /*     box_corners(tr); */
-    /*     /1* notcurses_render(nc); *1/ */
+    /*     mselector_select(tb[TCHOS], (msel->sel+1)%msel->nitems); */
+    /*     sleep(1); */
     /* } */
+    while(1){
+        keypress = notcurses_get_blocking(nc, &ni);
+        if(!mselector_offer_mice(tb[TCHOS], &ni)){
+            mselector_offer_kbd(tb[TCHOS], &ni);
+        }
+        /* ncselector_offer_input(ns, &ni); */
+        /* draw_box(n, NULL, tr); */
+        /* box_corners(tr); */
+        /* notcurses_render(nc); */
+    }
     /* ncselector_destroy(ns, NULL); */
     /* return NULL; */
 }
