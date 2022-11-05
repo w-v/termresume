@@ -13,6 +13,7 @@
 #include "bg.h"
 #include "bg_3dperlin.h"
 #include "text.h"
+#include "input.h"
 
 void check_mingeom(struct notcurses* nc, struct tres* tr){
     unsigned int tgeom[2], cgeom[2];
@@ -95,18 +96,18 @@ int main(void){
 
     pthread_create(&scroller_thread, NULL, scroller, &sargs);
 
-    pthread_t chos_thread;
-    struct chos_args cargs = {
+    pthread_t input_thread;
+    struct input_args iargs = {
         .nc = nc,
         .tr = tr
     };
 
-    pthread_create(&chos_thread, NULL, run_chos, &cargs);
+    pthread_create(&input_thread, NULL, input_run, &iargs);
 
     bg_3dperlin_run(nc, tr, nbg, bg3d);
 
     pthread_join(scroller_thread, NULL);
-    pthread_join(chos_thread, NULL);
+    pthread_join(input_thread, NULL);
 
     sleep(100);
 

@@ -30,8 +30,10 @@ struct ncplane* create_bg(struct notcurses* nc, struct tres* tr){
     };
     struct ncplane* n = ncplane_create(nstd, &nopts);
 
-    ncplane_move_bottom(n);
+    ncplane_move_below(n, tb[TCONT]->n);
 
+    ncplane_set_bg_alpha(n, NCALPHA_OPAQUE);
+    ncplane_set_base(n," ", 0, 0);
 
     return n;
 }

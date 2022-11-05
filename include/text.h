@@ -3,6 +3,7 @@
 
 #include <notcurses/notcurses.h>
 #include "tres.h"
+#include "mscroller.h"
 
 struct tblock* create_text(struct notcurses* nc, struct tres* tr);
 
@@ -12,7 +13,7 @@ typedef struct textitem {
     struct ncplane* n;
     char* text;
     unsigned int rows;
-    /* unsigned int scroll; */
+    struct mscroller* mscr;
 } textitem;
 
 
