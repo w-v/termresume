@@ -320,7 +320,7 @@ void box_corners(struct tres* tr){
 
 }
 
-void draw_box(struct ncplane* ntarg, char* border, struct tres* tr){
+void draw_box(struct ncplane* ntarg, char* border){
     if(border == NULL){
         border = "┌┐└┘─│";
     }

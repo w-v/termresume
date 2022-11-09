@@ -9,13 +9,14 @@ struct tblock* create_text(struct notcurses* nc, struct tres* tr);
 
 struct textitem* create_textitem(struct tblock* ttext, char* text);
 
+void* textitem_display(void* args, int i);
+
 typedef struct textitem {
     struct ncplane* n;
     char* text;
     unsigned int rows;
     struct mscroller* mscr;
 } textitem;
-
 
 #endif
 

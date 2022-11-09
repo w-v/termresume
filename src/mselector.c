@@ -73,8 +73,14 @@ int mselector_select(struct tblock* tb, int nsel){
     ncplane_putstr_yx(n, y++, x, msel->items[nsel]);
 
     msel->sel = nsel;
+    msel->callback(msel->callback_args, nsel);
 
     return nsel-osel;
+}
+
+void mselector_reg_callback(struct mselector* msel, void* (*callback)(void*, int), void* args){
+    msel->callback = callback;
+    msel->callback_args = args;
 }
 
 bool mselector_offer_mice(struct tblock* tb, const ncinput* nc){

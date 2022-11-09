@@ -83,7 +83,7 @@ struct tblock* create_pic(struct notcurses* nc, struct tres* tr){
 
     tpic->n = n;
 
-    draw_box(n, NULL, tr);
+    draw_box(n, NULL);
 
 
     return tpic;

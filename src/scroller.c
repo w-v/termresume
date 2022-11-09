@@ -77,7 +77,7 @@ struct tblock* create_scroller(struct tres* tr){
 
     ncplane_set_bg_alpha(n, NCALPHA_OPAQUE);
     ncplane_set_base(n," ", 0, 0);
-    draw_box(n, NULL, tr);
+    draw_box(n, NULL);
 
     ncplane_cursor_move_yx(n, tscrol->bs->off[0], tscrol->bs->off[1]);
 
@@ -91,7 +91,7 @@ void animate(struct notcurses* nc, struct tres* tr){
     struct ncplane* n = tb[TSCROL]->n;
     unsigned int size[2];
     ncplane_dim_yx(n, &size[0], &size[1]);
-    int nsec = 8000000;
+    int nsec = 7000000;
     struct timespec pause = { .tv_sec = 0, .tv_nsec = nsec, };
 
     for(int i=2; i<size[1]+1; i++){
@@ -122,7 +122,7 @@ void animate(struct notcurses* nc, struct tres* tr){
         //for(int i=2; i<size[0]+1; i++){
         /* ncplane_resize_simple(n, i, size[1]); */
 
-        draw_box(n,NULL, tr);
+        draw_box(n,NULL);
         box_corners(tr);
         /* notcurses_render(nc); */
         nanosleep(&pause, NULL);

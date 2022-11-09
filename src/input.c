@@ -7,16 +7,16 @@
 
 void tblock_select(struct tblock** tb, struct tblock* st){
     struct mselector* msel = (struct mselector*) tb[TCHOS]->widget;
-    struct mscroller* mscr = (struct mscroller*) ((struct textitem*) tb[TTEXT]->widget)->mscr;
+    struct textitem** titems = (struct textitem**) tb[TTEXT]->widget;
     if(st == tb[TCHOS]){
         // unselect text
-        scrollbar_show(mscr, false);
+        scrollbar_show(titems[msel->sel]->mscr, false);
         // select chos
         mselector_select(tb[TCHOS], msel->sel);
     }
     else if(st == tb[TTEXT]){
         // select text
-        scrollbar_show(mscr, true);
+        scrollbar_show(titems[msel->sel]->mscr, true);
         // unselect chos
         mselector_unselect(tb[TCHOS]);
     }
@@ -40,7 +40,7 @@ void* input_run(void* args){
     struct tblock** tb = tr->tb;
     /* struct ncplane* n = tb[TCHOS]->n; */
     struct mselector* msel = (struct mselector*) tb[TCHOS]->widget;
-    struct mscroller* mscr = (struct mscroller*) ((struct textitem*) tb[TTEXT]->widget)->mscr;
+    struct textitem** titems = (struct textitem**) tb[TTEXT]->widget;
     
     struct ncinput ni;
     uint32_t keypress;
@@ -49,7 +49,7 @@ void* input_run(void* args){
     while(1){
         keypress = notcurses_get_blocking(nc, &ni);
 
-        if(mscroller_offer_mice(mscr, &ni)){
+        if(mscroller_offer_mice(titems[msel->sel]->mscr, &ni)){
             selected = tb[TTEXT];
             tblock_select(tb, selected);
         }
@@ -71,7 +71,7 @@ void* input_run(void* args){
             mselector_offer_kbd(tb[TCHOS], &ni);
         }
         else if(selected == tb[TTEXT]){
-            mscroller_offer_kbd(mscr, &ni);
+            mscroller_offer_kbd(titems[msel->sel]->mscr, &ni);
         }
     }
 }

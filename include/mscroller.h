@@ -12,6 +12,8 @@ typedef struct mscroller {
    int maxscroll;
 } mscroller;
 
+void line_break(char* t, int len);
+
 void mscroller_scrollto(struct mscroller* mscr, int y);
 
 bool mscroller_offer_kbd(struct mscroller* mscr, const ncinput* nc);
