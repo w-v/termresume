@@ -126,9 +126,8 @@ void mscroller_scrollto(struct mscroller* mscr, int y){
     char* subtxt;
     ncplane_dim_yx(mscr->n, &dim[0], &dim[1]);
     if(y >= 0 && y <= mscr->maxscroll-dim[0]){
-        if(y > 0 && ncplane_dim_y(mscr->ndum) <= dim[0]){
-            // plane is bigger than text
-            // no need to scroll
+        if(y > 0 && !mscr->scrolling){
+            // don't scroll
             // (allow y=0 to display first lines)
             return;
         }

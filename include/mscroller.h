@@ -10,6 +10,7 @@ typedef struct mscroller {
    struct ncplane* nbar;
    bool sbar_show;
    int maxscroll;
+   bool scrolling;
 } mscroller;
 
 void line_break(char* t, int len);

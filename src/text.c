@@ -93,6 +93,7 @@ struct tblock* create_text(struct notcurses* nc, struct tres* tr){
     struct textitem** t = ts;
     while(*e != NULL){
         *t = create_textitem(ttext, *e);
+        fprintf(stderr, "textitem maxscroll %d \n", (*t)->mscr->maxscroll);
         t++;
         e++;
     }
@@ -159,9 +160,13 @@ struct textitem* create_textitem(struct tblock* ttext, char* text){
     titem->mscr->n = ncplane_create(titem->n, &nopts1);
     titem->mscr->ndum = dummyplane_create(titem->mscr->n, titem->text);
     if(ncplane_dim_y(titem->mscr->ndum) > size[0]){
+        // plane is bigger than text
+        // no need to scroll
+        titem->mscr->scrolling = true;
         titem->mscr->nbar = scrollbar_create(titem->n, titem->mscr->n);
     }
     else{
+        titem->mscr->scrolling = false;
         titem->mscr->nbar = NULL;
         /* unsigned int dim[2]; */
         /* ncplane_dim_yx(titem->mscr->ndum, &dim[0], &dim[1]); */

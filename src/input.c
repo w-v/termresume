@@ -49,7 +49,7 @@ void* input_run(void* args){
     while(1){
         keypress = notcurses_get_blocking(nc, &ni);
 
-        if(mscroller_offer_mice(titems[msel->sel]->mscr, &ni)){
+        if(titems[msel->sel]->mscr->scrolling && mscroller_offer_mice(titems[msel->sel]->mscr, &ni)){
             selected = tb[TTEXT];
             tblock_select(tb, selected);
         }
@@ -57,7 +57,7 @@ void* input_run(void* args){
             selected = tb[TCHOS];
             tblock_select(tb, selected);
         }
-        else if(ni.evtype != NCTYPE_RELEASE){
+        else if(titems[msel->sel]->mscr->scrolling && ni.evtype != NCTYPE_RELEASE){
             if(ni.id == NCKEY_RIGHT && selected == tb[TCHOS]){
                 selected = tb[TTEXT];
                 tblock_select(tb, selected);
