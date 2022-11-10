@@ -10,6 +10,8 @@
 #include "mscroller.h"
 #include "mselector.h"
 
+int sel = 0;
+
 char* entries[] = {
 "\n\
 I have a passion for computers science and computer graphics, I studied software engineering before shifting to research. Today I'm looking to learn and grow my skills in the industry\n",
@@ -76,7 +78,6 @@ struct tblock* create_text(struct notcurses* nc, struct tres* tr){
         .flags = 0,
     };
     struct ncplane* n = ncplane_create(tr->tb[TCONT]->n, &nopts);
-    ncplane_move_above(n, tb[TCONT]->n);
 
     ncplane_set_bg_alpha(n, NCALPHA_OPAQUE);
     ncplane_set_base(n," ", 0, 0);
@@ -93,26 +94,43 @@ struct tblock* create_text(struct notcurses* nc, struct tres* tr){
     struct textitem** t = ts;
     while(*e != NULL){
         *t = create_textitem(ttext, *e);
-        fprintf(stderr, "textitem maxscroll %d \n", (*t)->mscr->maxscroll);
         t++;
         e++;
     }
     ttext->widget = ts;
 
     struct mselector* msel = (struct mselector*) tb[TCHOS]->widget;
-    mselector_reg_callback(msel, textitem_display, ttext);
+    mselector_reg_callback(msel, textitem_display, tr);
 
     return ttext;
 }
 
 void* textitem_display(void* args, int i){
-    struct tblock* ttext = (struct tblock*) args;
-    struct textitem* titem = ((struct textitem**) ttext->widget)[i];
-    ncplane_move_family_top(titem->n);
-    /* unsigned int dim[2]; */
-    /* ncplane_dim_yx(titem->n, &dim[0], &dim[1]); */
-    /* ncplane_resize_simple(ttext->n, dim[0], dim[1]); */
-    /* draw_box(ttext->n, NULL); */
+    struct tres* tr = (struct tres*) args;
+    struct tblock* ttext = tr->tb[TTEXT];
+    struct textitem* ntitem = ((struct textitem**) ttext->widget)[i];
+    struct textitem* otitem = ((struct textitem**) ttext->widget)[sel];
+    unsigned int dim[2], size[2];
+    
+    // hide previously selected
+    ncplane_move_family_bottom(otitem->n);
+    
+    // display newly selected
+    ncplane_move_family_top(ntitem->n);
+
+    ncplane_dim_yx(ntitem->n, &dim[0], &dim[1]);
+    size[0] =  dim[0]+ttext->bs->off[0];
+    size[1] = dim[1]+ttext->bs->off[1]+1;
+
+    ncplane_resize_simple(ttext->n, size[0], size[1]);
+
+    // remove old box
+    ncplane_erase(ttext->n);
+
+    draw_box(ttext->n, NULL);
+    box_corners(tr);
+
+    sel = i;
     return NULL;
 }
 
@@ -140,8 +158,8 @@ struct textitem* create_textitem(struct tblock* ttext, char* text){
     };
     titem->n = ncplane_create(ttext->n, &nopts);
 
-    ncplane_set_bg_alpha(titem->n, NCALPHA_OPAQUE);
-    ncplane_set_base(titem->n," ", 0, 0);
+/*     ncplane_set_bg_alpha(titem->n, NCALPHA_OPAQUE); */
+/*     ncplane_set_base(titem->n," ", 0, 0); */
 
     titem->mscr = malloc(sizeof(struct mscroller));
 
@@ -168,9 +186,12 @@ struct textitem* create_textitem(struct tblock* ttext, char* text){
     else{
         titem->mscr->scrolling = false;
         titem->mscr->nbar = NULL;
-        /* unsigned int dim[2]; */
-        /* ncplane_dim_yx(titem->mscr->ndum, &dim[0], &dim[1]); */
-        /* ncplane_resize_simple(titem->mscr->n, dim[0], dim[1]); */
+        unsigned int dim[2];
+        ncplane_dim_yx(titem->mscr->ndum, &dim[0], &dim[1]);
+        ncplane_resize_simple(titem->mscr->n, dim[0], dim[1]);
+        ncplane_resize_simple(titem->n, dim[0], dim[1]);
+        /* draw_box(titem->n, NULL); */
+        /* fprintf(stderr, "titem size %d %d\n", ncplane_dim_y(titem->mscr->n), ncplane_dim_x(titem->mscr->n)); */
     }
     titem->mscr->sbar_show = false;
     titem->mscr->maxscroll = ncplane_dim_y(titem->mscr->ndum);

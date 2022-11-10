@@ -15,6 +15,14 @@
 #include "text.h"
 #include "input.h"
 
+void order_z(struct notcurses* nc, struct tres* tr){
+    struct tblock** tb = tr->tb;
+    ncplane_move_above(tb[TPIC]->n, tb[TCONT]->n);
+    ncplane_move_above(tb[TCHOS]->n, tb[TPIC]->n);
+    ncplane_move_above(tb[TTEXT]->n, tb[TCHOS]->n);
+    ncplane_move_above(tb[TSCROL]->n, tb[TTEXT]->n);
+}
+
 void check_mingeom(struct notcurses* nc, struct tres* tr){
     unsigned int tgeom[2], cgeom[2];
     struct ncplane* nstd = notcurses_stddim_yx(nc, &tgeom[0], &tgeom[1]);
@@ -77,12 +85,15 @@ int main(void){
 
     tb[TTEXT] = create_text(nc, tr);
 
+    order_z(nc, tr);
+
     box_corners(tr);
 
     resize_cont(nc, tr);
     center_cont(nc, tr);
 
     check_mingeom(nc,tr);
+
 
 
     struct ncplane* nbg = create_bg(nc, tr);

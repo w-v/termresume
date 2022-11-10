@@ -118,6 +118,7 @@ struct ncplane* scrollbar_create(struct ncplane* parent, struct ncplane* n){
         };
     struct ncplane* nbar = ncplane_create(parent, &nopts);
     return nbar;
+    ncplane_set_bg_alpha(n, NCALPHA_BLEND);
 }
 
 
