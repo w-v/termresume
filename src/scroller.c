@@ -13,8 +13,8 @@ char* lines[] = {
     "Hey, I'm Robin 👋",
     "I'm a software engineer",
     /* "I'm a research engineer",       // get research blinking replacing by software */
-    "I like Computer Graphics,",
-    "Python, and terminals",
+    /* "I like Computer Graphics,", */
+    /* "Python, and terminals", */
     "This is my homepage 🏡",
     "",
     "Browse it from your terminal:",

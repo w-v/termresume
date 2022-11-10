@@ -74,9 +74,6 @@ struct tblock* create_chos(struct notcurses* nc, struct tres* tr){
     tchos->n = n;
 
     draw_box(n, NULL);
-    /* ncplane_move_above(n, tb[TCONT]->n); */
-    /* ncplane_move_below(n, tb[TSCROL]->n); */
-    ncplane_move_top(n);
 
 
     return tchos;

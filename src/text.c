@@ -17,16 +17,41 @@ char* entries[] = {
 I have a passion for computers science and computer graphics, I studied software engineering before shifting to research. Today I'm looking to learn and grow my skills in the industry\n",
 
 "\n\
-Research Engineer      Inria       2020-22\n\n\
-⚪ Research centered around 3D character animation and virtual crowds for video game and movie applications\n\
-⚪ Collaboration and technical assistance of PhDs and researchers\n\
-⚪ Lead developer of an open source 3D character animation research framework in Python, OpenGL and Qt (PyNimation, link below)\n\
-⚪ Usage and promotion of software engineering tools and methods: versioning, tests, documentation, code quality, CI/CD, dependency management\n\
-⚪ Full-time management of a software development intern working on the PyNimation project\n",
-    
+Research Engineer | Inria | 2020-22 | 2 years\n\n\
+• Research centered around 3D character animation and virtual crowds for video game and movie applications\n\
+• Collaboration and technical assistance of PhDs and researchers\n\
+• Lead developer of an open source 3D character animation research framework in Python, OpenGL and Qt (PyNimation, link below)\n\
+• Usage and promotion of software engineering tools and methods: versioning, tests, documentation, code quality, CI/CD, dependency management\n\
+• Full-time management of a software development intern working on the PyNimation project\n\
+\n\n\
+Research Intern | Inria | 2020 | 6 months\n\n\
+• Exploration of the research subject : Synthesising motion variations in Human Crowds\n\
+• Bibliography, research problem definition, method implementation, conduction of user studies\n\
+• Scientific publication : Perception of Motion Variations in Large-Scale Virtual Human Crowds\n\
+\n\n\
+Software Engineer Intern | ARIADNEXT | 2019 | 3 months\n\n\
+• Conception and development of a real time remote trace browsing and visualization software for an Android app\n\
+• Code and trace parsing with a Clang plugin, traces are sent from the embedded C++ application and received by a Python server, they are accessed through a React web application where available Android devices are announced via mDNS\n\
+\n",
+
 "\n\
-Virtual human crowds are regularly featured in movies and video games. With a large number of virtual characters each behaving in their own way, spectacular scenes can be produced. The more diverse the characters and their behaviors are, the more realistic the virtual crowd is expected to be perceived. Hence, creating virtual crowds is a trade-off between the cost associated with acquiring more diverse assets, namely more virtual characters with their animations, and achieving better realism. In this paper, our focus is on the perceived variety in virtual crowd character motions. We present an experiment exploring whether observers are able to identify virtual crowds including motion clones in the case of large-scale crowds (from 250 to 1000 characters). As it is not possible to acquire individual motions for such numbers of characters, we rely on a state-of-the-art motion variation approach to synthesize unique variations of existing examples for each character in the crowd. Participants then compared pairs of videos, where each character was animated either with a unique motion or using a subset of these motions. Our results show that virtual crowds with more than two motions (one per gender) were perceptually equivalent, regardless of their size. We believe these findings can help create efficient crowd applications, and are an additional step into a broader understanding of the perception of motion variety.\n",
-    "\nlalalal\n",
+Computer Science Research | Universit\u00e9 de Rennes I\n\
+2019-20\n\
+• Second year of Master of Science (MS)\n\
+• Grade: 3.1 GPA\n\
+\n\n\
+Computer Software Engineering | Universit\u00e9 de Rennes I\n\
+2018-19\n\
+• First year of Master of Science (MS)\n\
+• Grade: 4.0 GPA\n\
+\n\n\
+Computer Science | Universit\u00e9 de Rennes I\n\
+2015-18\n\
+• Bachelor of Science - BS\n\
+• Grade: 4.0 GPA\
+\n",
+
+"\nlalalal\n",
     NULL
 };
 
