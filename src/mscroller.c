@@ -9,6 +9,9 @@
 #include "block.h"
 #include "text.h"
 
+char* barchars_default[] = {"▄",  "█", "▀"};
+char* barchars_shade[] =  {"░", "░", "░"};
+
 void line_break(char* t, int len){
     int x = 0, lb;
     for(int i = 0;t[i] != '\0';i++, x++){
@@ -50,11 +53,19 @@ void scrollbar_update(struct mscroller* mscr){
 
 }
 
-void scrollbar_update_half(struct mscroller* mscr){
+void scrollbar_update_half(struct mscroller* mscr, char** barchars_){
     unsigned int dim[2];
     ncplane_dim_yx(mscr->n, &dim[0], &dim[1]);
     unsigned int dimdum[2];
     ncplane_dim_yx(mscr->ndum, &dimdum[0], &dimdum[1]);
+    char** barchars;
+
+    if(barchars_ == NULL){
+        barchars = barchars_default;
+    }
+    else {
+        barchars = barchars_;
+    }
 
     int bar[2];
     // start
@@ -67,19 +78,19 @@ void scrollbar_update_half(struct mscroller* mscr){
     ncplane_cursor_move_yx(mscr->nbar, bar[0]/2, 0);
     unsigned long w;
     if(bar[0]%2 == 1){
-        ncplane_putegc(mscr->nbar, "▄", &w);
+        ncplane_putegc(mscr->nbar, barchars[0], &w);
         ncplane_cursor_move_yx(mscr->nbar, -1, 0);
         ncplane_cursor_move_rel(mscr->nbar, 1, 0);
         bar[1]--;
     }
     while(bar[1]-- > 0){
-        ncplane_putegc(mscr->nbar, "█", &w);
+        ncplane_putegc(mscr->nbar, barchars[1], &w);
         /* ncplane_putchar(mscr->nbar, '0'); */
         ncplane_cursor_move_yx(mscr->nbar, -1, 0);
         ncplane_cursor_move_rel(mscr->nbar, 1, 0);
     }
     if(bar[0]%2 == 1){
-        ncplane_putegc(mscr->nbar, "▀", &w);
+        ncplane_putegc(mscr->nbar, barchars[2], &w);
         ncplane_cursor_move_yx(mscr->nbar, -1, 0);
         ncplane_cursor_move_rel(mscr->nbar, 1, 0);
     }
@@ -92,10 +103,11 @@ void scrollbar_show(struct mscroller* mscr, bool show){
         if(mscr->sbar_show != show){
             mscr->sbar_show = show;
             if(show){
-                scrollbar_update_half(mscr);
+                scrollbar_update_half(mscr, NULL);
             }
             else{
-                ncplane_erase(mscr->nbar);
+                scrollbar_update_half(mscr, barchars_shade);
+                /* ncplane_erase(mscr->nbar); */
             }
         }
     }
@@ -133,8 +145,13 @@ void mscroller_scrollto(struct mscroller* mscr, int y){
             return;
         }
         mscr->y = y;
-        if(mscr->nbar != NULL && mscr->sbar_show){
-            scrollbar_update_half(mscr);
+        if(mscr->nbar != NULL){
+            if(mscr->sbar_show){
+                scrollbar_update_half(mscr, NULL);
+            }
+            else {
+                scrollbar_update_half(mscr, barchars_shade);
+            }
         }
         ncplane_erase(mscr->n);
         for(int i = 0; i< dim[0]; i++){
@@ -150,8 +167,13 @@ void mscroller_scrollto_puttext(struct mscroller* mscr, int y){
     ncplane_dim_yx(mscr->n, &dim[0], &dim[1]);
     if(y >= 0 && y <= mscr->maxscroll-dim[0]){
         mscr->y = y;
-        if(mscr->nbar != NULL && mscr->sbar_show){
-            scrollbar_update_half(mscr);
+        if(mscr->nbar != NULL){
+            if(mscr->sbar_show){
+                scrollbar_update_half(mscr, NULL);
+            }
+            else {
+                scrollbar_update_half(mscr, NULL);
+            }
         }
         char* subtxt = ncplane_contents(mscr->ndum, y, 0, dim[0], dim[1]);
         ncplane_erase(mscr->n);

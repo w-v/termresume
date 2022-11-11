@@ -27,7 +27,7 @@ struct ncplane* scrollbar_create(struct ncplane* parent, struct ncplane* n);
 
 void scrollbar_update(struct mscroller* mscr);
 
-void scrollbar_update_half(struct mscroller* mscr);
+void scrollbar_update_half(struct mscroller* mscr, char** barchars);
 
 void scrollbar_show(struct mscroller* mscr, bool show);
 
