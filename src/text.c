@@ -20,7 +20,8 @@ I have a passion for computers science and computer graphics, I studied software
 Research Engineer | Inria | 2020-22 | 2 years\n\n\
 • Research centered around 3D character animation and virtual crowds for video game and movie applications\n\
 • Collaboration and technical assistance of PhDs and researchers\n\
-• Lead developer of an open source 3D character animation research framework in Python, OpenGL and Qt (PyNimation, link below)\n\
+• Lead developer of an open source 3D character animation research framework in Python, OpenGL and Qt (PyNimation, see Projects section)\n\
+• Re-implementation of most of the animation processing algorithms using tensors, leading to up to a 100x speed up\n\
 • Usage and promotion of software engineering tools and methods: versioning, tests, documentation, code quality, CI/CD, dependency management\n\
 • Full-time management of a software development intern working on the PyNimation project\n\
 \n\n\
@@ -31,7 +32,7 @@ Research Intern | Inria | 2020 | 6 months\n\n\
 \n\n\
 Software Engineer Intern | ARIADNEXT | 2019 | 3 months\n\n\
 • Conception and development of a real time remote trace browsing and visualization software for an Android app\n\
-• Code and trace parsing with a Clang plugin, traces are sent from the embedded C++ application and received by a Python server, they are accessed through a React web application where available Android devices are announced via mDNS\n\
+• Code and trace parsing with a Clang plugin, traces are sent from the embedded C++ application and received by a Python server, they are accessed through a React web application where available Android devices are announced via mDNS\
 \n",
 
 "\n\
@@ -51,7 +52,49 @@ Computer Science | Universit\u00e9 de Rennes I\n\
 • Grade: 4.0 GPA\
 \n",
 
-"\nlalalal\n",
+"\n\
+PyNimation | 3D character animation research framework\n\
+https://gitlab.inria.fr/lhoyet/pynimation\n\n\
+• PyNimation is an open source framework for 3D character animation research\n\
+• It enables importing and exporting animations from and to standard formats, editing animations as NumPy arrays, and provides classical algorithms as IK, retargeting, cyclification, etc.\n\
+• It features an interactive and configurable OpenGL 3D viewer, as well as a Qt graphical user interface\n\
+\n\n\
+OpenMindedGL | Game engine university project\n\
+https://gitlab.inria.fr/lhoyet/pynimation\n\n\
+• As a end-of-year project for my Bachelor's Degree, we implemented a naive 3D game engine in C++ and OpenGL\n\
+• It featured .obj loading, parameterized shaders, volumetric clouds, procedural terrain generation with different biomes, dynamic terrain loading with various levels of details (LOD)\n\
+• I was involved in the general architecture and renderer, in the the procedural terrain generation and I was responsible for the dynamic terrain loading\n\
+\n\n\
+And many others on my github https://github.com/w-v\
+\n",
+
+"\n\
+Python Developer\n\n\
+• After being the main developer of a Python project for 2 years, Python has become my main language\n\
+• My experience is at a point where I know most technical quirks and patterns\n\
+• I have extensive experience with Python related tooling, project building and deployment (mypy, sphinx, pipenv, poetry, setuptools, etc.)\n\
+• I am very familiar with numpy and scipy and I have notions of panda, tensorflow and pytorch\n\
+\n\n\
+Graphics Developer\n\n\
+• Computer graphics is my first love and is always something I like to come back to\n\
+• While at Inria I acquired a good understanding of the field and its research subjects\n\
+• It was also a chance to work (a lot) on my 3D math\n\
+• I know OpenGL well, through personal projects and being the maintainer of a 3D engine\n\
+• I worked on several personal projects in C/C++\n\
+\n\n\
+Linux Geek\n\n\
+• Linux is my second love, and working on my environment and servers my main hobby\n\
+• I've been a daily user for 7 years, I've used most common distros, I'm now using Arch (btw)\n\
+• I am proficient in bash scripting\n\
+• I know my way around Docker, Ansible, Vagrant\n\
+• I have a homelab (https://reddit.com/r/homelab)\
+\n",
+
+"\n\
+Github | https://github.com/w-v\n\n\
+LinkedIn | https://www.linkedin.com/in/robinadili\n\n\
+Gitlab @Inria | https://gitlab.inria.fr/radili\
+\n",
     NULL
 };
 

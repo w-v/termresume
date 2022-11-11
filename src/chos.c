@@ -12,7 +12,9 @@ char* items[] = {
   "About",
   "Work",
   "Education",
+  "Projects",
   "Skills",
+  "Links",
   NULL
 };
 struct tblock* create_chos(struct notcurses* nc, struct tres* tr){
