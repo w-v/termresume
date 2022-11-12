@@ -49,6 +49,10 @@ struct tblock* create_cont(struct notcurses* nc, struct tres* tr){
     return tcont;
 }
 
+void destroy_cont(struct tblock* tcont){
+    tblock_destroy(tcont);
+}
+
 void resize_cont(struct notcurses* nc, struct tres* tr){
     struct tblock** tb = tr->tb;
     struct ncplane* n = tb[TCONT]->n;

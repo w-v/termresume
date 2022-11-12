@@ -13,4 +13,6 @@ typedef struct scroller_args {
 void* scroller(void *args);
 struct tblock* create_scroller(struct tres* tr);
 
+void destroy_scroller(struct tblock* tscrol);
+
 #endif

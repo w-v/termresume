@@ -5,6 +5,7 @@
 #include "tres.h"
 
 struct tblock* create_pic(struct notcurses* nc, struct tres* tr);
+void destroy_pic(struct tblock* tpic);
 
 #endif
 

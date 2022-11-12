@@ -277,8 +277,19 @@ void destroy_textitems(struct textitem** tt){
     struct textitem* t = tt[0];
     while(t != NULL){ 
         free(t->text);
+        if(t->mscr->nbar){
+            ncplane_destroy(t->mscr->nbar);
+        }
+        ncplane_destroy(t->mscr->ndum);
+        ncplane_destroy(t->mscr->n);
         free(t->mscr);
+        ncplane_destroy(t->n);
         free(t);
     }
     free(tt);
+}
+
+void destroy_text(struct tblock* ttext){
+    tblock_destroy(ttext);
+    destroy_textitems((struct textitem**) ttext->widget);
 }

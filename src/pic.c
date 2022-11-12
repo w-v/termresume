@@ -88,3 +88,7 @@ struct tblock* create_pic(struct notcurses* nc, struct tres* tr){
 
     return tpic;
 }
+
+void destroy_pic(struct tblock* tpic){
+    tblock_destroy(tpic);
+}

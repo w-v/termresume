@@ -11,4 +11,6 @@ void resize_cont(struct notcurses* nc, struct tres* tr);
 
 void center_cont(struct notcurses* nc, struct tres* tr);
 
+void destroy_cont(struct tblock* tcont);
+
 #endif

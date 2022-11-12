@@ -122,12 +122,15 @@ int main(void){
 
     sleep(100);
 
+    ncplane_destroy(nbg);
     bg_3dperlin_destroy(bg3d);
-    tblock_destroy(tb[TCONT]);
-    tblock_destroy(tb[TPIC]);
-    tblock_destroy(tb[TSCROL]);
-    tblock_destroy(tb[TCHOS]);
-    tblock_destroy(tb[TTEXT]);
+    destroy_cont(tb[TCONT]);
+    destroy_pic(tb[TPIC]);
+    destroy_scroller(tb[TSCROL]);
+    destroy_chos(tb[TCHOS]);
+    destroy_text(tb[TTEXT]);
+    free(tb);
+    free(blocks);
     notcurses_stop(nc);
     return EXIT_SUCCESS;
 }

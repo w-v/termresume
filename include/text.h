@@ -7,9 +7,12 @@
 
 struct tblock* create_text(struct notcurses* nc, struct tres* tr);
 
+void destroy_text(struct tblock* ttext);
+
 struct textitem* create_textitem(struct tblock* ttext, char* text);
 
 void* textitem_display(void* args, int i);
+
 
 typedef struct textitem {
     struct ncplane* n;

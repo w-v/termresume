@@ -86,6 +86,10 @@ struct tblock* create_scroller(struct tres* tr){
     return tscrol; 
 }
 
+void destroy_scroller(struct tblock* tscrol){
+    tblock_destroy(tscrol);
+}
+
 void animate(struct notcurses* nc, struct tres* tr){
     struct tblock** tb = tr->tb;
     struct ncplane* n = tb[TSCROL]->n;

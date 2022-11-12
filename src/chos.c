@@ -80,3 +80,8 @@ struct tblock* create_chos(struct notcurses* nc, struct tres* tr){
 
     return tchos;
 }
+
+void destroy_chos(struct tblock* tchos){
+    tblock_destroy(tchos);
+    free((struct mselector*) tchos->widget);
+}
