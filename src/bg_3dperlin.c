@@ -119,8 +119,8 @@ void bg_3dperlin_destroy(struct bg_3dperlin* bg3d){
 
 void* bg_3dperlin_run(struct notcurses* nc, struct tres* tr, struct ncplane* n, struct bg_3dperlin* bg3d){
 
-    int ms = 10;
-    struct timespec ts = { .tv_sec = 0, .tv_nsec = ms * 1000000};
+    int msdelay = 1000.f/90;
+    struct timespec fdelay = { .tv_sec = 0, .tv_nsec = msdelay * 1000000};
 
     int i = 0, len = bg3d->len;
 
@@ -129,6 +129,8 @@ void* bg_3dperlin_run(struct notcurses* nc, struct tres* tr, struct ncplane* n, 
     while(1){
 
         if(clock()-t0 > tdiff){
+
+            nanosleep(&fdelay, NULL);
         
             clearfbuf(bg3d->fbuf, bg3d->tgeom);
             clearzbuf(bg3d->zbuf, bg3d->tgeom);
