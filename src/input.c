@@ -58,11 +58,11 @@ void* input_run(void* args){
             tblock_select(tb, selected);
         }
         else if(titems[msel->sel]->mscr->scrolling && ni.evtype != NCTYPE_RELEASE){
-            if(ni.id == NCKEY_RIGHT && selected == tb[TCHOS]){
+            if((ni.id == NCKEY_RIGHT || ni.id == NCKEY_ENTER) && selected == tb[TCHOS]){
                 selected = tb[TTEXT];
                 tblock_select(tb, selected);
             }
-            else if(ni.id == NCKEY_LEFT && selected == tb[TTEXT]){
+            else if((ni.id == NCKEY_LEFT || ni.id == NCKEY_ESC) && selected == tb[TTEXT]){
                 selected = tb[TCHOS];
                 tblock_select(tb, selected);
             }
