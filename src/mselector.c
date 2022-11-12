@@ -117,10 +117,10 @@ bool mselector_offer_kbd(struct tblock* tb, const ncinput* nc){
     struct mselector* msel = (struct mselector*) tb->widget;
 
     if(nc->evtype != NCTYPE_RELEASE){
-        if(nc->id == NCKEY_UP){
+        if(nc->id == NCKEY_UP || nc->id == 'k'){
             mselector_select(tb, msel->sel-1);
             return true;
-        }else if(nc->id == NCKEY_DOWN){
+        }else if(nc->id == NCKEY_DOWN || nc->id == 'j'){
             mselector_select(tb, msel->sel+1);
             return true;
         }else if(nc->id == NCKEY_PGDOWN){

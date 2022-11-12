@@ -205,10 +205,10 @@ bool mscroller_offer_mice(struct mscroller* mscr, const ncinput* nc){
 bool mscroller_offer_kbd(struct mscroller* mscr, const ncinput* nc){
 
     if(nc->evtype != NCTYPE_RELEASE){
-        if(nc->id == NCKEY_UP){
+        if(nc->id == NCKEY_UP || nc->id == 'k'){
             mscroller_scrollto(mscr, mscr->y-1);
             return true;
-        }else if(nc->id == NCKEY_DOWN){
+        }else if(nc->id == NCKEY_DOWN || nc->id == 'j'){
             mscroller_scrollto(mscr, mscr->y+1);
             return true;
         }
