@@ -59,6 +59,14 @@ https://gitlab.inria.fr/lhoyet/pynimation\n\n\
 • It enables importing and exporting animations from and to standard formats, editing animations as NumPy arrays, and provides classical algorithms as IK, retargeting, cyclification, etc.\n\
 • It features an interactive and configurable OpenGL 3D viewer, as well as a Qt graphical user interface\n\
 \n\n\
+Termresume | Interactive terminal resume (this thing)\n\
+https://github.com/w-v/termresume\n\n\
+• My resume/homepage (which you're currently browsing)\n\
+• Written in C, using the excellent notcurses library (https://github.com/dankamongmen/notcurses)\n\
+• Dynamic sizing and positioning of widgets, custom unicode line-breaking, text scrolling with scrollbars\n\
+• Shaded, point-based 3d renderer, rendering a continuously scrolling perlin noise generated terrain\n\
+• Available on the web thanks to webssh2, modified to support sixel graphics, gpu rendering and hyperlinks\n\
+\n\n\
 OpenMindedGL | Game engine university project\n\
 https://gitlab.inria.fr/lhoyet/pynimation\n\n\
 • As a end-of-year project for my Bachelor's Degree, we implemented a naive 3D game engine in C++ and OpenGL\n\
