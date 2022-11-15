@@ -12,6 +12,8 @@
 char* barchars_default[] = {"▄",  "█", "▀"};
 char* barchars_shade[] =  {"░", "░", "░"};
 
+char* arrowschars_default[] = {"▲", "▼"};
+
 void line_break(char* t, int len){
     int x = 0, lb;
     for(int i = 0;t[i] != '\0';i++, x++){
@@ -53,6 +55,31 @@ void scrollbar_update(struct mscroller* mscr){
 
 }
 
+void scrollbar_arrows(struct mscroller* mscr, char** arrowschars_, bool up, bool down){
+    unsigned int dim[2];
+    ncplane_dim_yx(mscr->nbar, &dim[0], &dim[1]);
+
+    char** arrowschars;
+
+    if(arrowschars_ == NULL){
+        arrowschars = arrowschars_default;
+    }
+    else {
+        arrowschars = arrowschars_;
+    }
+
+    if(up){
+        ncplane_cursor_move_yx(mscr->nbar, 0, 0);
+        ncplane_putegc(mscr->nbar, arrowschars[0], NULL);
+    }
+
+    if(down){
+        ncplane_cursor_move_yx(mscr->nbar, ncplane_dim_y(mscr->nbar)-1, 0);
+        ncplane_putegc(mscr->nbar, arrowschars[1], NULL);
+    }
+
+}
+
 void scrollbar_update_half(struct mscroller* mscr, char** barchars_){
     unsigned int dim[2];
     ncplane_dim_yx(mscr->n, &dim[0], &dim[1]);
@@ -69,13 +96,13 @@ void scrollbar_update_half(struct mscroller* mscr, char** barchars_){
 
     int bar[2];
     // start
-    bar[0] = round((mscr->y/(float)dimdum[0])*dim[0]*2);
+    bar[0] = round((mscr->y/(float)dimdum[0])*(dim[0]-2)*2);
     // size 
-    bar[1] = round((dim[0]/(float)dimdum[0])*dim[0]);
+    bar[1] = round((dim[0]/(float)dimdum[0])*(dim[0]-2));
 
     ncplane_erase(mscr->nbar);
 
-    ncplane_cursor_move_yx(mscr->nbar, bar[0]/2, 0);
+    ncplane_cursor_move_yx(mscr->nbar, bar[0]/2+1, 0);
     unsigned long w;
     if(bar[0]%2 == 1){
         ncplane_putegc(mscr->nbar, barchars[0], &w);
@@ -95,6 +122,12 @@ void scrollbar_update_half(struct mscroller* mscr, char** barchars_){
         ncplane_cursor_move_rel(mscr->nbar, 1, 0);
     }
 
+    scrollbar_arrows(
+            mscr, 
+            NULL, 
+            mscr->y > 0,
+            mscr->y < mscr->maxscroll-dim[0]
+        );
 
 }
 
