@@ -49,8 +49,16 @@ struct tblock* create_pic(struct notcurses* nc, struct tres* tr){
         blitter = NCBLIT_DEFAULT;
     }
 
-    const char *fn = "/home/robin/src/termresume/bs/pic/me.jpg";
+
+    const char* relfn = "./data/me.jpg";
+    char* install_dir = getenv("TRES_INSTALL_DIR");
+    if(install_dir == NULL){
+        install_dir=".";
+    }
+    char* fn = malloc(sizeof(char)*(strlen(relfn)+strlen(install_dir)+2));
+    sprintf(fn, "%s/%s", install_dir, relfn);
     struct ncvisual* ncv = ncvisual_from_file(fn);
+    free(fn);
 
     struct ncvisual_options vopts = {
         .n = n,
