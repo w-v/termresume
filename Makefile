@@ -23,9 +23,13 @@ debug:
 	@echo $(SRC_FILES)
 
 deps:
-	git clone https://github.com/recp/cglm
-	cp -r cglm/include/cglm include
+	git clone https://github.com/recp/cglm &&\
+	cp -r cglm/include/cglm include &&\
 	rm -rf cglm
-	git clone https://github.com/w-v/term3d_c include
+	git clone https://github.com/w-v/term3d_c include/term3d_c
+	git clone https://github.com/Auburn/FastNoiseLite &&\
+	mv FastNoiseLite/C/FastNoiseLite.h include &&\
+	rm -rf FastNoiseLite
+
 
 
