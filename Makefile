@@ -4,7 +4,7 @@ OBJ_DIR := obj
 H_DIR := include
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
-LDFLAGS := -lnotcurses-core -lnotcurses -lm -lpthread
+LDFLAGS := -lnotcurses-core -lnotcurses# -lm -lpthread
 CPPFLAGS := -Wall -g -I./$(H_DIR)
 #CXXFLAGS := 
 
@@ -21,3 +21,11 @@ clean:
 debug:
 	@echo $(OBJ_FILES)
 	@echo $(SRC_FILES)
+
+deps:
+	git clone https://github.com/recp/cglm
+	cp -r cglm/include/cglm include
+	rm -rf cglm
+	git clone https://github.com/w-v/term3d_c include
+
+
