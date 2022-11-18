@@ -27,4 +27,4 @@ WORKDIR ${TRES_INSTALL_DIR}
 RUN make deps
 RUN make
 
-# RUN usermod --shell ${TRES_INSTALL_DIR}/tres abc 
+RUN usermod --shell ${TRES_INSTALL_DIR}/tres abc 
