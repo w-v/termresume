@@ -1,32 +1,30 @@
 FROM linuxserver/openssh-server
 
-ENV INSTALL_DIR=/srv/tres
+ENV TRES_INSTALL_DIR=/srv/tres
 
 RUN apk update && apk add musl-dev notcurses notcurses-dev notcurses-libs make gcc git
 
-RUN echo "\
-\
- ███████████            █████      ███                  █████████       █████  ███  ████   ███ \
-▒▒███▒▒▒▒▒███          ▒▒███      ▒▒▒                  ███▒▒▒▒▒███     ▒▒███  ▒▒▒  ▒▒███  ▒▒▒  \
- ▒███    ▒███   ██████  ▒███████  ████  ████████      ▒███    ▒███   ███████  ████  ▒███  ████ \
- ▒██████████   ███▒▒███ ▒███▒▒███▒▒███ ▒▒███▒▒███     ▒███████████  ███▒▒███ ▒▒███  ▒███ ▒▒███ \
- ▒███▒▒▒▒▒███ ▒███ ▒███ ▒███ ▒███ ▒███  ▒███ ▒███     ▒███▒▒▒▒▒███ ▒███ ▒███  ▒███  ▒███  ▒███ \
- ▒███    ▒███ ▒███ ▒███ ▒███ ▒███ ▒███  ▒███ ▒███     ▒███    ▒███ ▒███ ▒███  ▒███  ▒███  ▒███ \
- █████   █████▒▒██████  ████████  █████ ████ █████    █████   █████▒▒████████ █████ █████ █████\
-▒▒▒▒▒   ▒▒▒▒▒  ▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒▒ ▒▒▒▒ ▒▒▒▒▒    ▒▒▒▒▒   ▒▒▒▒▒  ▒▒▒▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒ \
-\
-" > /etc/motd
+# RUN echo -e "\
+#  ███████████            █████      ███                  █████████       █████  ███  ████   ███ \n\
+# ▒▒███▒▒▒▒▒███          ▒▒███      ▒▒▒                  ███▒▒▒▒▒███     ▒▒███  ▒▒▒  ▒▒███  ▒▒▒  \n\
+#  ▒███    ▒███   ██████  ▒███████  ████  ████████      ▒███    ▒███   ███████  ████  ▒███  ████ \n\
+#  ▒██████████   ███▒▒███ ▒███▒▒███▒▒███ ▒▒███▒▒███     ▒███████████  ███▒▒███ ▒▒███  ▒███ ▒▒███ \n\
+#  ▒███▒▒▒▒▒███ ▒███ ▒███ ▒███ ▒███ ▒███  ▒███ ▒███     ▒███▒▒▒▒▒███ ▒███ ▒███  ▒███  ▒███  ▒███ \n\
+#  ▒███    ▒███ ▒███ ▒███ ▒███ ▒███ ▒███  ▒███ ▒███     ▒███    ▒███ ▒███ ▒███  ▒███  ▒███  ▒███ \n\
+#  █████   █████▒▒██████  ████████  █████ ████ █████    █████   █████▒▒████████ █████ █████ █████\n\
+# ▒▒▒▒▒   ▒▒▒▒▒  ▒▒▒▒▒▒  ▒▒▒▒▒▒▒▒  ▒▒▒▒▒ ▒▒▒▒ ▒▒▒▒▒    ▒▒▒▒▒   ▒▒▒▒▒  ▒▒▒▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒ ▒▒▒▒▒ \n\
+# " > /etc/motd
 
-COPY Makefile ${INSTALL_DIR}/
-COPY include ${INSTALL_DIR}/include
-COPY src ${INSTALL_DIR}/src
-COPY data ${INSTALL_DIR}/data
-RUN mkdir -pv ${INSTALL_DIR}/obj
+COPY Makefile ${TRES_INSTALL_DIR}/
+COPY include ${TRES_INSTALL_DIR}/include
+COPY src ${TRES_INSTALL_DIR}/src
+COPY data ${TRES_INSTALL_DIR}/data
+RUN mkdir -pv ${TRES_INSTALL_DIR}/obj
 
-RUN chown -R abc:abc ${INSTALL_DIR}
+RUN chown -R abc:abc ${TRES_INSTALL_DIR}
 
-WORKDIR ${INSTALL_DIR}
-# RUN make deps
-# RUN make
+WORKDIR ${TRES_INSTALL_DIR}
+RUN make deps
+RUN make
 
-# RUN usermod --shell ${INSTALL_DIR}/tres abc 
+# RUN usermod --shell ${TRES_INSTALL_DIR}/tres abc 
