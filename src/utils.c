@@ -75,8 +75,8 @@ int box_touching(int slines[2][2], int tlines[2][2]){
         }
     }
 
-    /* fprintf(stderr, "s ((%d, %d), (%d, %d)) t ((%d, %d), (%d, %d))\n",slines[0][0], slines[0][1],slines[1][0], slines[1][1], tlines[0][0], tlines[0][1],tlines[1][0], tlines[1][1]); */
-    /* fprintf(stderr, "touching %s\n", (char* [5]){"NO", "TOP", "BOTTOM", "LEFT", "RIGHT"}[ret]); */
+    DEBUG("s ((%d, %d), (%d, %d)) t ((%d, %d), (%d, %d))\n",slines[0][0], slines[0][1],slines[1][0], slines[1][1], tlines[0][0], tlines[0][1],tlines[1][0], tlines[1][1]);
+    DEBUG("touching %s\n", (char* [5]){"NO", "TOP", "BOTTOM", "LEFT", "RIGHT"}[ret]);
     return ret;
 }
 
@@ -134,8 +134,8 @@ int is_below(struct ncplane* ns, struct ncplane* nt){
 void print_hex(const char *s)
 {
   while(*s)
-    fprintf(stderr, "%x", *s++);
-  fprintf(stderr, "\n");
+    DEBUG("%x", *s++);
+  DEBUG("%s", "\n");
 }
 
 unsigned int char2side(char c){
@@ -245,7 +245,7 @@ char char_connect(char* s, char* t){
 void box_connect(struct ncplane* ns,struct ncplane* nt, int corn[2]){
     int rels[2], relt[2];
     char* schar, * tchar;
-    char rchar[3];
+    char rchar[4];
     int below;
 
     memcpy(rels, corn, 2*sizeof(int));
@@ -256,27 +256,28 @@ void box_connect(struct ncplane* ns,struct ncplane* nt, int corn[2]){
     ncplane_translate_abs(nt, &relt[0], &relt[1]); 
     tchar = ncplane_at_yx(nt, relt[0], relt[1], NULL, NULL);
 
-    memcpy(rchar, schar, 3*sizeof(char));
+    memcpy(rchar, schar, 4*sizeof(char));
     rchar[2] = char_connect(schar, tchar);
 
-    /* fprintf(stderr, "source char %s, len %d\n", schar, strlen(schar)); */
-    /* fprintf(stderr, "target char %s, len %d\n", tchar, strlen(tchar)); */
-    /* fprintf(stderr, "result char %s, len %d\n", rchar, strlen(rchar)); */
+    DEBUG("source char %s, len %d\n", schar, strlen(schar));
+    DEBUG("target char %s, len %d\n", tchar, strlen(tchar));
+    DEBUG("result char %s, len %d\n", rchar, strlen(rchar));
     
-    // /!\ dont disturb cursor position of other planes
+    // /!\ save and restore cursor position
     unsigned int cpos[2];
+
     nccell rcell = NCCELL_TRIVIAL_INITIALIZER;
     if(is_below(ns, nt)){
-        /* fprintf(stderr, "target below source\n"); */
-        /* fprintf(stderr, "printing to source\n"); */
+        DEBUG("%s\n", "target below source\n");
+        DEBUG("%s\n", "printing to source\n");
         ncplane_cursor_yx(ns, &cpos[0], &cpos[1]);
         nccell_load(ns, &rcell, rchar);
         ncplane_putc_yx(ns, rels[0], rels[1], &rcell);
         ncplane_cursor_move_yx(ns, cpos[0], cpos[1]);
     }
     else {
-        /* fprintf(stderr, "target above source\n"); */
-        /* fprintf(stderr, "printing to target\n"); */
+        DEBUG("%s\n", "target above source\n");
+        DEBUG("%s\n", "printing to target\n");
         ncplane_cursor_yx(nt, &cpos[0], &cpos[1]);
         nccell_load(nt, &rcell, rchar);
         ncplane_putc_yx(nt, relt[0], relt[1], &rcell);
@@ -290,23 +291,24 @@ void box_corners(struct tres* tr){
     struct ncplane* ns, * nt;
     int slines[2][2], tlines[2][2], corners[2][2] = {{0,0},{0,0}};
     int touch, inters;
+    DEBUG("%s\n", "-------- BOX CORNERS --------");
 
     for(tblock_e* b = tr->blocks; *b != TEND; b++){
         if(tb[*b] != NULL){
             ns = tb[*b]->n;
             box_lines(ns, slines);
-            /* fprintf(stderr, "source %s\n", ncplane_name(ns)); */
+            DEBUG("source %s\n", ncplane_name(ns));
             for(tblock_e* db = b+1; *db != TEND; db++){
                 if(tb[*db] != NULL){
                     nt = tb[*db]->n;
                     box_lines(nt, tlines);
-                    /* fprintf(stderr, "target %s\n", ncplane_name(nt)); */
+                    DEBUG("target %s\n", ncplane_name(nt));
 
                     touch = box_touching(slines, tlines);
                     if(touch){
                         inters = box_inters(slines, tlines, touch, corners);
                         if(inters){
-                            /* fprintf(stderr, "FOUND CORNERS ((%d, %d), (%d, %d))\n",corners[0][0], corners[0][1],corners[1][0], corners[1][1]); */
+                            DEBUG("FOUND CORNERS ((%d, %d), (%d, %d))\n",corners[0][0], corners[0][1],corners[1][0], corners[1][1]);
                             box_connect(ns, nt, corners[0]);
                             box_connect(ns, nt, corners[1]);
 
@@ -317,6 +319,7 @@ void box_corners(struct tres* tr){
             }
         }
     }
+    DEBUG("%s\n", "-----------------------------");
 
 }
 
@@ -357,16 +360,16 @@ void draw_box(struct ncplane* ntarg, char* border){
     /* bool within; */
     /* char* charat; */
 
-    /* fprintf(stderr, "target %s\n", ncplane_name(ntarg)); */
+    /* DEBUG("target %s\n", ncplane_name(ntarg)); */
     /* for(tblock_e* b = tr->blocks; *b != TEND; b++){ */
 
     /*     if(tb[*b] != NULL && tb[*b]->n != ntarg){ */
     /*         for(int c = 0; c  4; c++){ */
     /*             corn = corners[c]; */
     /*             memcpy(abs, corn, 2*sizeof(int)); */
-    /*             fprintf(stderr, "corn %d %d\n", corn[0], corn[1]); */
+    /*             DEBUG("corn %d %d\n", corn[0], corn[1]); */
     /*             ncplane_translate(ntarg, NULL, &abs[0], &abs[1]); */ 
-    /*             fprintf(stderr, "abs %d %d\n", abs[0], abs[1]); */
+    /*             DEBUG("abs %d %d\n", abs[0], abs[1]); */
 
     /*             cst = corners_step[c]; */
     /*             for(int st = 0; cst < 4; st+=cst[2]){ */
@@ -374,14 +377,14 @@ void draw_box(struct ncplane* ntarg, char* border){
 
     /*             memcpy(rel, abs, 2*sizeof(int)); */
     /*             within = ncplane_translate_abs(tb[*b]->n, &rel[0], &rel[1]); */
-    /*             fprintf(stderr, "rel %s %d %d within %d\n", ncplane_name(tb[*b]->n), rel[0], rel[1], within); */
+    /*             DEBUG("rel %s %d %d within %d\n", ncplane_name(tb[*b]->n), rel[0], rel[1], within); */
     /*             if(within){ */
     /*                 ncplane_dim_yx(tb[*b]->n, &dim[0], &dim[1]); */
     /*                 charat = ncplane_at_yx(tb[*b]->n, rel[0], rel[1], NULL, NULL); */
 
     /*                 for(int ch = 0; ch < 6; ch++){ */
     /*                     if(*charat == tb[*b]->bd->border[ch]){ */
-    /*                         fprintf(stderr, "FOUND %s %s\n", ncplane_name(tb[*b]->n), charat); */
+    /*                         DEBUG("FOUND %s %s\n", ncplane_name(tb[*b]->n), charat); */
     /*                     } */
     /*                 } */
     /*             } */

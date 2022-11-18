@@ -55,7 +55,7 @@ void check_mingeom(struct notcurses* nc, struct tres* tr){
 }
 
 void run_handler(int _){
-    fprintf(stderr, "run_handler\n");
+    DEBUG("%s\n", "run_handler");
     run = 0;
 }
 
@@ -135,27 +135,27 @@ int main(void){
 
     pthread_create(&input_thread, NULL, input_run, &iargs);
 
-    fprintf(stderr, "bg_3dperlin_run\n");
+    DEBUG("%s\n", "bg_3dperlin_run");
     bg_3dperlin_run(nc, tr, nbg, bg3d);
 
-    fprintf(stderr, "join scroller\n");
+    DEBUG("%s\n", "join scroller");
     pthread_join(scroller_thread, NULL);
 
-    fprintf(stderr, "join input\n");
+    DEBUG("%s\n", "join input");
     pthread_cancel(input_thread);
     /* pthread_join(input_thread, NULL); */
 
-    fprintf(stderr, "ending\n");
+    DEBUG("%s\n", "ending");
 
     ncplane_destroy(nbg);
     bg_3dperlin_destroy(bg3d);
-    fprintf(stderr, "destroy\n");
+    DEBUG("%s\n", "destroy");
     destroy_cont(tb[TCONT]);
     destroy_pic(tb[TPIC]);
     destroy_scroller(tb[TSCROL]);
     destroy_chos(tb[TCHOS]);
     destroy_text(tb[TTEXT]);
-    fprintf(stderr, "free\n");
+    DEBUG("%s\n", "free");
     free(tb);
     free(blocks);
     notcurses_stop(nc);

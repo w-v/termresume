@@ -5,6 +5,11 @@
 
 extern int run;
 
+#define DEBUG_ON    0
+
+#define DEBUG(fmt, ...) \
+            do { if (DEBUG_ON) fprintf(stderr, fmt, __VA_ARGS__); } while (0)
+
 typedef enum {
     TCONT,
     TPIC,
