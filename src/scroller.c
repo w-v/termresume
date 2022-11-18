@@ -19,7 +19,8 @@ char* lines[] = {
     "",
     "Browse it from your terminal:",
     "",
-    "ssh -p 4422 en@robinadi.li",
+    "ssh -p 4222 en@robinadi.li",
+    "(password is username)",
     NULL
 };
 
