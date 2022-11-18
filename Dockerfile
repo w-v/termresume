@@ -19,3 +19,15 @@ RUN make deps
 RUN make
 
 RUN usermod --shell ${TRES_INSTALL_DIR}/tres abc 
+RUN echo -e "\
+DisableForwarding yes\n\
+AllowUsers en\n\
+AuthenticationMethods password\n\
+Banner ${TRES_INSTALL_DIR}/data/banner\n\
+MaxSessions 1\n\
+PermitRootLogin no\n\
+PermitUserRC no\n\
+PrintMotd yes\n\
+SetEnv TERM_INSTALL_DIR=${TRES_INSTALL_DIR}\n\
+ForceCommand ${TRES_INSTALL_DIR}/tres\n\
+" >> /etc/ssh/sshd_config
