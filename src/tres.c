@@ -49,7 +49,7 @@ void check_mingeom(struct notcurses* nc, struct tres* tr){
 
         ncplane_printf_aligned(n, tgeom[0]/2, NCALIGN_CENTER, "Terminal must be at least %dx%d, please resize and reload", cgeom[0], cgeom[1]);
         notcurses_render(nc);
-        while(1) sleep(1);
+        while(run) sleep(1);
         
     }
 }
