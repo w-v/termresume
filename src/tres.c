@@ -61,6 +61,13 @@ void run_handler(int _){
 
 int main(void){
 
+    // kitty ugly fix
+    char* term = getenv("TERM");
+    if(term != NULL && strcmp(term, "xterm-kitty") == 0){
+        setenv("TERM", "kitty", 1);
+        DEBUG("%s\n%s\n", "TERM is set to xterm-kitty, which is not currently available in ncurses-terminfo-base, changing it to kitty", "see https://github.com/kovidgoyal/kitty/issues/879");
+    }
+
     signal(SIGABRT, run_handler);
     signal(SIGBUS, run_handler);
     signal(SIGFPE, run_handler);
