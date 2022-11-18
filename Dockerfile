@@ -2,7 +2,7 @@ FROM linuxserver/openssh-server
 
 ENV TRES_INSTALL_DIR=/srv/tres
 
-RUN apk update && apk add musl-dev notcurses notcurses-dev notcurses-libs make gcc git
+RUN apk update && apk add musl-dev notcurses notcurses-dev notcurses-libs make gcc git ncurses-terminfo-base
 
 # RUN echo -e "\
 #  ███████████            █████      ███                  █████████       █████  ███  ████   ███ \n\
