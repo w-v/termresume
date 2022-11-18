@@ -3,6 +3,8 @@
 
 #include <notcurses/notcurses.h>
 
+extern int run;
+
 typedef enum {
     TCONT,
     TPIC,

@@ -203,6 +203,10 @@ void* textitem_display(void* args, int i){
     // remove old box
     ncplane_erase(ttext->n);
 
+    // ugly hack for 
+    // corners messed up when different texts have different width (corner of previous text stays)
+    draw_box(tr->tb[TSCROL]->n,NULL);
+
     draw_box(ttext->n, NULL);
     box_corners(tr);
 
@@ -282,17 +286,18 @@ struct textitem* create_textitem(struct tblock* ttext, char* text){
 }
 
 void destroy_textitems(struct textitem** tt){
-    struct textitem* t = tt[0];
-    while(t != NULL){ 
-        free(t->text);
-        if(t->mscr->nbar){
-            ncplane_destroy(t->mscr->nbar);
+    int i = 0;
+    while(tt[i] != NULL){ 
+        free(tt[i]->text);
+        if(tt[i]->mscr->nbar){
+            ncplane_destroy(tt[i]->mscr->nbar);
         }
-        ncplane_destroy(t->mscr->ndum);
-        ncplane_destroy(t->mscr->n);
-        free(t->mscr);
-        ncplane_destroy(t->n);
-        free(t);
+        ncplane_destroy(tt[i]->mscr->ndum);
+        ncplane_destroy(tt[i]->mscr->n);
+        free(tt[i]->mscr);
+        ncplane_destroy(tt[i]->n);
+        free(tt[i]);
+        i++;
     }
     free(tt);
 }

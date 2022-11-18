@@ -98,7 +98,7 @@ void animate(struct notcurses* nc, struct tres* tr){
     int nsec = 7000000;
     struct timespec pause = { .tv_sec = 0, .tv_nsec = nsec, };
 
-    for(int i=2; i<size[1]+1; i++){
+    for(int i=2; i<size[1]+1 && run; i++){
         ncplane_erase(n);
         
         //for(int i=2; i<size[1]+1; i++){
@@ -160,7 +160,7 @@ void* scroller(void* args){
 
     ncplane_cursor_move_yx(n, off[0], off[1]);
 
-    while(true){
+    while(run){
         if(*c == ','){
             nanosleep(&pauses[1], NULL);
         }

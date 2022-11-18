@@ -22,16 +22,6 @@ void tblock_select(struct tblock** tb, struct tblock* st){
     }
 }
 
-bool input_offer_kbd(struct tblock** tb, struct tblock* selected, const ncinput* nc){
-    if(nc->evtype != NCTYPE_RELEASE){
-        if(nc->id == NCKEY_LEFT || nc->id == NCKEY_RIGHT){
-
-        }
-    }
-    return false;
-
-}
-
 void* input_run(void* args){
     struct input_args* iargs = (struct input_args*) args;
     struct notcurses* nc = iargs->nc;
@@ -46,7 +36,7 @@ void* input_run(void* args){
     uint32_t keypress;
     struct tblock* selected = tb[TCHOS];
     tblock_select(tb, selected);
-    while(1){
+    while(run){
         keypress = notcurses_get_blocking(nc, &ni);
 
         if(titems[msel->sel]->mscr->scrolling && mscroller_offer_mice(titems[msel->sel]->mscr, &ni)){

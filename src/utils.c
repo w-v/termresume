@@ -327,12 +327,16 @@ void draw_box(struct ncplane* ntarg, char* border){
     unsigned int rows, cols;
     ncplane_dim_yx(ntarg, &rows, &cols);
 
+    unsigned int cur_pos[2];
+    ncplane_cursor_yx(ntarg,&cur_pos[0],&cur_pos[1]);
     ncplane_cursor_move_yx(ntarg,0,0);
     nccell ul = NCCELL_TRIVIAL_INITIALIZER, ll = NCCELL_TRIVIAL_INITIALIZER;
     nccell lr = NCCELL_TRIVIAL_INITIALIZER, ur = NCCELL_TRIVIAL_INITIALIZER;
     nccell hl = NCCELL_TRIVIAL_INITIALIZER, vl = NCCELL_TRIVIAL_INITIALIZER;
     nccells_load_box(ntarg, 0, 0, &ul, &ur, &ll, &lr, &hl, &vl, border);
     ncplane_box_sized(ntarg, &ul, &ur, &ll, &lr, &hl, &vl, rows, cols, 0);
+
+    ncplane_cursor_move_yx(ntarg,cur_pos[0],cur_pos[1]);
 
     /* struct tblock** tb = tr->tb; */
     /* int corners[4][2] = { */ 

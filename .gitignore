@@ -1,6 +1,7 @@
 bs/
 obj/
-log
+log*
+Makefile_*
 .vimrc
 .run
 tres

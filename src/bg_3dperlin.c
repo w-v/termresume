@@ -16,6 +16,7 @@
 #include "term3d_c/render.h"
 #include "cglm/cglm.h"
 #include "bg_3dperlin.h"
+#include "tres.h"
 
 void terrain_normals_ln(geom* g, int len, int height, int i){
     vec3 h = {0.f, 0.f, 1.f} , l = {1.f, 0.f, 0.f};
@@ -126,7 +127,7 @@ void* bg_3dperlin_run(struct notcurses* nc, struct tres* tr, struct ncplane* n, 
 
     clock_t t0 = clock(), tdiff =  CLOCKS_PER_SEC * 6;
 
-    while(1){
+    while(run){
 
         if(clock()-t0 > tdiff){
 
@@ -153,6 +154,7 @@ void* bg_3dperlin_run(struct notcurses* nc, struct tres* tr, struct ncplane* n, 
         notcurses_render(nc);
         
         i++;
+        /* return NULL; */
         /* nanosleep(&ts, NULL); */
     }
      

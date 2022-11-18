@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <locale.h>
 #include <pthread.h>
+#include <signal.h>
 #include <notcurses/notcurses.h>
 
 #include "pic.h"
@@ -14,6 +15,9 @@
 #include "bg_3dperlin.h"
 #include "text.h"
 #include "input.h"
+#include "tres.h"
+
+int run = 1;
 
 void order_z(struct notcurses* nc, struct tres* tr){
     struct tblock** tb = tr->tb;
@@ -50,9 +54,24 @@ void check_mingeom(struct notcurses* nc, struct tres* tr){
     }
 }
 
+void run_handler(int _){
+    fprintf(stderr, "run_handler\n");
+    run = 0;
+}
+
 int main(void){
-    struct notcurses_options opts = {
-        .flags = 0,
+
+    signal(SIGABRT, run_handler);
+    signal(SIGBUS, run_handler);
+    signal(SIGFPE, run_handler);
+    signal(SIGILL, run_handler);
+    signal(SIGINT, run_handler);
+    signal(SIGQUIT, run_handler);
+    signal(SIGSEGV, run_handler);
+    signal(SIGTERM , run_handler);
+
+   struct notcurses_options opts = {
+        .flags = NCOPTION_NO_QUIT_SIGHANDLERS,
         /* .loglevel = NCLOGLEVEL_DEBUG */
     };
 
@@ -98,6 +117,7 @@ int main(void){
 
     struct ncplane* nbg = create_bg(nc, tr);
     struct bg_3dperlin* bg3d = bg_3dperlin_create(nc);
+    
 
     pthread_t scroller_thread;
     struct scroller_args sargs = {
@@ -115,20 +135,27 @@ int main(void){
 
     pthread_create(&input_thread, NULL, input_run, &iargs);
 
+    fprintf(stderr, "bg_3dperlin_run\n");
     bg_3dperlin_run(nc, tr, nbg, bg3d);
 
+    fprintf(stderr, "join scroller\n");
     pthread_join(scroller_thread, NULL);
-    pthread_join(input_thread, NULL);
 
-    sleep(100);
+    fprintf(stderr, "join input\n");
+    pthread_cancel(input_thread);
+    /* pthread_join(input_thread, NULL); */
+
+    fprintf(stderr, "ending\n");
 
     ncplane_destroy(nbg);
     bg_3dperlin_destroy(bg3d);
+    fprintf(stderr, "destroy\n");
     destroy_cont(tb[TCONT]);
     destroy_pic(tb[TPIC]);
     destroy_scroller(tb[TSCROL]);
     destroy_chos(tb[TCHOS]);
     destroy_text(tb[TTEXT]);
+    fprintf(stderr, "free\n");
     free(tb);
     free(blocks);
     notcurses_stop(nc);
