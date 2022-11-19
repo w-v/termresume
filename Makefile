@@ -5,7 +5,7 @@ H_DIR := include
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
 LDFLAGS := -lnotcurses-core -lnotcurses# -lm -lpthread
-CPPFLAGS := -Wall -g -I./$(H_DIR)
+CPPFLAGS := -Wall -O5 -I./$(H_DIR)
 #CXXFLAGS := 
 
 $(EXEC): $(OBJ_FILES)
