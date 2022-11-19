@@ -120,7 +120,7 @@ void bg_3dperlin_destroy(struct bg_3dperlin* bg3d){
 
 void* bg_3dperlin_run(struct notcurses* nc, struct tres* tr, struct ncplane* n, struct bg_3dperlin* bg3d){
 
-    int msdelay = 1000.f/90;
+    int msdelay = 1000.f/70;
     struct timespec fdelay = { .tv_sec = 0, .tv_nsec = msdelay * 1000000};
 
     int i = 0, len = bg3d->len;
