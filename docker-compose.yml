@@ -1,0 +1,35 @@
+---
+version: "2.1"
+services:
+  termresume:
+    build: 
+      context: "git@github.com/w-v/termresume.git"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+      - SUDO_ACCESS=false #optional
+      - PASSWORD_ACCESS=true #optional
+      - USER_PASSWORD=en #optional
+      - USER_NAME=en #optional
+    ports:
+      - 4222:2222
+    networks:
+      tres_net:
+          ipv4_address: 172.16.0.3
+    restart: unless-stopped
+  termsite:
+    build: 
+      context: "git@github.com/w-v/webssh2.git#mine"
+    ports:
+      - 2222:2222
+    networks:
+      tres_net:
+          ipv4_address: 172.16.0.2
+    restart: unless-stopped
+networks:
+  tres_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.16.0.0/24"
