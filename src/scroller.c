@@ -157,7 +157,7 @@ void* scroller(void* args){
     };
     size_t w = 0;
 
-    animate(nc,tr);
+    /* animate(nc,tr); */
 
     ncplane_cursor_move_yx(n, off[0], off[1]);
 
