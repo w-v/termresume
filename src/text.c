@@ -165,7 +165,7 @@ struct tblock* create_text(struct notcurses* nc, struct tres* tr){
     draw_box(n, NULL);
 
     char** e = entries;
-    int nentries = sizeof(entries)/sizeof(char*)-1;
+    int nentries = sizeof(entries)/sizeof(char*);
     struct textitem** ts = malloc(nentries * sizeof(struct textitem*));
     struct textitem** t = ts;
     while(*e != NULL){
@@ -173,6 +173,7 @@ struct tblock* create_text(struct notcurses* nc, struct tres* tr){
         t++;
         e++;
     }
+    *t = NULL;
     ttext->widget = ts;
 
     struct mselector* msel = (struct mselector*) tb[TCHOS]->widget;
@@ -221,8 +222,10 @@ struct textitem* create_textitem(struct tblock* ttext, char* text){
 
     unsigned int size[2] = {ttext->bs->size[0]-2, ttext->bs->size[1]-ttext->bs->off[1]*2};
 
-    titem->text = malloc(strlen(text)*sizeof(char));
+    int textlen = strlen(text);
+    titem->text = malloc((textlen+1)*sizeof(char));
     strcpy(titem->text, text);
+    titem->text[textlen] = '\0';
     line_break(titem->text, size[1]+1);
 
 
@@ -303,6 +306,6 @@ void destroy_textitems(struct textitem** tt){
 }
 
 void destroy_text(struct tblock* ttext){
-    tblock_destroy(ttext);
     destroy_textitems((struct textitem**) ttext->widget);
+    tblock_destroy(ttext);
 }
