@@ -256,6 +256,10 @@ void box_connect(struct ncplane* ns,struct ncplane* nt, int corn[2]){
     ncplane_translate_abs(nt, &relt[0], &relt[1]); 
     tchar = ncplane_at_yx(nt, relt[0], relt[1], NULL, NULL);
 
+    DEBUG("corn %d %d\n", corn[0], corn[1]);
+    DEBUG("rels %d %d\n", rels[0], rels[1]);
+    DEBUG("relt %d %d\n", relt[0], relt[1]);
+
     memcpy(rchar, schar, 4*sizeof(char));
     rchar[2] = char_connect(schar, tchar);
 

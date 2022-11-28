@@ -91,6 +91,7 @@ void center_cont(struct notcurses* nc, struct tres* tr){
         mid[2] = {0,0};
 
     ncplane_dim_yx(nstd, &mid[0], &mid[1]);
+    DEBUG("center_cont(): nstd dim %d %d\n", mid[0], mid[1]);
     ncplane_dim_yx(tb[TCONT]->n, &size[0], &size[1]);
 
     for(int e=0;e<2;e++){
