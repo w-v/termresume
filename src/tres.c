@@ -27,11 +27,13 @@ void order_z(struct notcurses* nc, struct tres* tr){
     ncplane_move_above(tb[TSCROL]->n, tb[TTEXT]->n);
 }
 
-void check_mingeom(struct notcurses* nc, struct tres* tr){
+void check_mingeom(struct notcurses* nc){
     unsigned int tgeom[2], cgeom[2];
     struct ncplane* nstd = notcurses_stddim_yx(nc, &tgeom[0], &tgeom[1]);
 
-    ncplane_dim_yx(tr->tb[TCONT]->n, &cgeom[0], &cgeom[1]);
+    /* ncplane_dim_yx(tr->tb[TCONT]->n, &cgeom[0], &cgeom[1]); */
+    cgeom[0] = 37;
+    cgeom[1] = 77;
 
     if(tgeom[0] < cgeom[0] || tgeom[1] < cgeom[1]){
         struct ncplane_options nopts = {
@@ -46,11 +48,17 @@ void check_mingeom(struct notcurses* nc, struct tres* tr){
         };
 
         struct ncplane* n = ncplane_create(nstd, &nopts);
+        struct timespec reloadt = { .tv_sec = 0, .tv_nsec = 100 * 1000000, };
 
-        ncplane_printf_aligned(n, tgeom[0]/2, NCALIGN_CENTER, "Terminal must be at least %dx%d, please resize and reload", cgeom[0], cgeom[1]);
-        notcurses_render(nc);
-        while(run) sleep(1);
-        
+        while((tgeom[0] < cgeom[0] || tgeom[1] < cgeom[1]) && run){
+            ncplane_dim_yx(nstd, &tgeom[0], &tgeom[1]);
+            ncplane_erase(n);
+            ncplane_printf_aligned(n, (int)(tgeom[0]/2), NCALIGN_CENTER, "Terminal must be at least %dx%d, currently %dx%d, please resize\n", cgeom[0], cgeom[1], tgeom[0], tgeom[1]);
+            notcurses_render(nc);
+            /* sleep(1); */
+            nanosleep(&reloadt, NULL);
+        }
+        ncplane_destroy(n);
     }
 }
 
@@ -88,6 +96,8 @@ int main(void){
     }
     notcurses_mice_enable(nc, NCMICE_BUTTON_EVENT);
 
+    check_mingeom(nc);
+
     int nblocks = 6;
 
     struct tblock** tb = malloc(nblocks * sizeof(tblock*));
@@ -117,9 +127,6 @@ int main(void){
 
     resize_cont(nc, tr);
     center_cont(nc, tr);
-
-    check_mingeom(nc,tr);
-
 
 
     struct ncplane* nbg = create_bg(nc, tr);
