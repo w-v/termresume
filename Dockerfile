@@ -29,7 +29,6 @@ PermitRootLogin no\n\
 PermitUserRC no\n\
 PrintMotd yes\n\
 SetEnv TERM_INSTALL_DIR=${TRES_INSTALL_DIR}\n\
-ForceCommand en\n\
 Match Address 172.16.0.2\n\
 \tBanner none\n\
 " >> /etc/ssh/sshd_config
