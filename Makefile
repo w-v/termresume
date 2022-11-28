@@ -6,6 +6,7 @@ SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 OBJ_FILES := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRC_FILES))
 LDFLAGS := -lnotcurses-core -lnotcurses# -lm -lpthread
 CPPFLAGS := -Wall -O5 -I./$(H_DIR)
+# CPPFLAGS := -Wall -g -I./$(H_DIR)
 #CXXFLAGS := 
 
 $(EXEC): $(OBJ_FILES)
@@ -26,9 +27,10 @@ deps:
 	git clone https://github.com/recp/cglm &&\
 	cp -r cglm/include/cglm include &&\
 	rm -rf cglm
-	git clone https://github.com/w-v/term3d_c include/term3d_c
+	git clone https://github.com/w-v/term3d_c &&\
+	cp -r term3d_c include
 	git clone https://github.com/Auburn/FastNoiseLite &&\
-	mv FastNoiseLite/C/FastNoiseLite.h include &&\
+	cp FastNoiseLite/C/FastNoiseLite.h include &&\
 	rm -rf FastNoiseLite
 
 
